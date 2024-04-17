@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use Illuminate\Http\Request;
 
 
@@ -9,10 +10,7 @@ class PostsController extends Controller
 {
     public function index()
     {
-        $posts = [
-            ['id' => 1, 'name' => 'Post 1'],
-            ['id' => 2, 'name' => 'Post 2'],
-        ];
+        $posts = Post::all();
         return view('posts.index', ['posts' => $posts]);
     }
     public function create()
@@ -23,33 +21,53 @@ class PostsController extends Controller
 
     public function store(Request $request)
     {
+        $postData = [
+            'user_id' => auth()->user()->id,
+            'name' => $request->name,
+            'description' => $request->description,
+            'image' => $request->image,
+            'category' => $request->category,
+            'author' => $request->author,
+        ];
+        Post::create($postData);
 
         return redirect('/posts');
     }
-    public function show($id)
+    public function show($id, Post $postModel)
     {
-        $post = [
-            'id' => $id, 'name' => 'Post 1'
-        ];
+        $post = $postModel->findOrFail($id);
         return view('posts.show', ['post' => $post]);
     }
+
     public function edit($id)
     {
-        $post = [
-            'id' => $id, 'name' => 'Post 1'
-        ];
+        $post = Post::findOrFail($id);
         return view('posts.edit', ['post' => $post]);
     }
 
+
     public function update($id, Request $request)
     {
+        $post = Post::findOrFail($id);
+
+        $postData = [
+            'name' => $request->name,
+            'description' => $request->description,
+            'image' => $request->image,
+            'category' => $request->category,
+            'author' => $request->author,
+        ];
+
+        $post->update($postData);
 
         return redirect('/posts');
     }
+
 
     public function destroy($id)
     {
 
+        Post::destroy($id);
         return redirect('/posts');
     }
 }

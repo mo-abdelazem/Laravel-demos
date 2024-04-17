@@ -39,6 +39,8 @@
             @foreach ($posts as $post)
             <li class="list-group-item d-flex justify-content-between align-items-center bg-dark border border-white-50 text-light">
                 {{ $post['name'] }}
+                |
+                {{ $post->user->name }}
                 <div class="btn-group" role="group">
                     <a href="/posts/{{ $post['id'] }}" class="btn btn-info mx-2 btn-sm">View</a>
                     <a href="/posts/{{ $post['id'] }}/edit" class="btn btn-primary mx-2 btn-sm">Edit</a>
