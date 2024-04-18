@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comments;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
 
 class PostsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
         $posts = Post::all();
@@ -21,6 +27,11 @@ class PostsController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'image' =>  'required|image|mimes:jpg,png,jpeg|max:2048'
+        ]);
         $postData = [
             'user_id' => auth()->user()->id,
             'name' => $request->name,
@@ -29,14 +40,21 @@ class PostsController extends Controller
             'category' => $request->category,
             'author' => $request->author,
         ];
+
         Post::create($postData);
 
         return redirect('/posts');
     }
-    public function show($id, Post $postModel)
+    public function show($id)
     {
-        $post = $postModel->findOrFail($id);
-        return view('posts.show', ['post' => $post]);
+        $post = Post::findOrFail($id);
+        $postCreatorId = $post->user_id;
+
+        $comments = Comments::where('post_id', $post->id)
+            ->where('user_id', $postCreatorId)
+            ->get();
+
+        return view('posts.show', ['post' => $post, 'comments' => $comments]);
     }
 
     public function edit($id)
@@ -49,7 +67,10 @@ class PostsController extends Controller
     public function update($id, Request $request)
     {
         $post = Post::findOrFail($id);
-
+        $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+        ]);
         $postData = [
             'name' => $request->name,
             'description' => $request->description,
