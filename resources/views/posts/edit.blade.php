@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<form action="/posts/{{ $post->id }}" method="POST">
+<form action="/posts/{{ $post->id }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PUT')
     <div class="mb-3" bs-data-theme="dark">
@@ -15,8 +15,13 @@
             name="description">{{ $post->description }}</textarea>
     </div>
     <div class="mb-3">
-        <label for="postImage" class="form-label">Image URL</label>
-        <input type="text" class="form-control bg-dark border-white-50 text-light" id="postImage" name="image"
+        @if ($post->image)
+        <p>Current Image: <a href="{{ asset('images/' . $post->image) }}">{{$post->image }}</a></p>
+        @endif
+        @error('image')
+        <div class="alert alert-danger">{{ $message }}</div>
+        @enderror
+        <input type="file" class="form-control bg-dark border-white-50 text-light" id="postImage" name="image"
             value="{{ $post->image }}">
     </div>
     <div class="mb-3">
@@ -26,8 +31,12 @@
     </div>
     <div class="mb-3">
         <label for="postAuthor" class="form-label">Author</label>
-        <input type="text" class="form-control bg-dark border-white-50 text-light" id="postAuthor" name="author"
-            value="{{ $post->author }}">
+        <select class="form-control bg-dark border-white-50 text-light" id="postAuthor" name="author">
+            @foreach($authors as $author)
+            <option value="{{ $author->id }}" {{ $author->id == $post->author ? 'selected' : '' }}>{{ $author->name }}
+            </option>
+            @endforeach
+        </select>
     </div>
     <button type="submit" class="btn btn-primary">Update</button>
 </form>

@@ -2,7 +2,11 @@
 
 @section('title', 'Posts')
 @section('content')
-<h1 class="mb-4">Posts</h1>
+<div class="d-flex justify-content-between align-items-center">
+    <h1 class="mb-4">Posts</h1>
+    <a href="/posts/create" class="btn btn-success mt-3">Create New Post</a>
+</div>
+
 <ul class="list-group">
     @foreach ($posts as $post)
     <li
@@ -22,6 +26,6 @@
     </li>
     @endforeach
 </ul>
-<a href="/posts/create" class="btn btn-success mt-3">Create New Post</a>
+{{ $posts->links() }}
 
 @endsection

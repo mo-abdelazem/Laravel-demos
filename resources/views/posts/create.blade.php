@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<form action="/posts" method="POST">
+<form action="/posts" method="POST" enctype="multipart/form-data">
     @csrf
     <div class="mb-3">
         <label for="postName" class="form-label">Post Name</label>
@@ -21,7 +21,17 @@
     </div>
     <div class="mb-3">
         <label for="postAuthor" class="form-label">Author</label>
-        <input type="text" class="form-control" id="postAuthor" name="author">
+        <select class="form-control" id="postAuthor" name="author">
+            @foreach($authors as $author)
+            <option value="{{ $author->id }}">{{ $author->name }}</option>
+            @endforeach
+        </select>
+    </div>
+    <input type="hidden" name="user_id" value="{{ auth()->id() }}">
+
+    <div class="mb-3">
+        <label for="postImage" class="form-label">Image</label>
+        <input type="file" class="form-control" id="postImage" name="image">
     </div>
     <button type="submit" class="btn btn-success">Create</button>
 </form>
