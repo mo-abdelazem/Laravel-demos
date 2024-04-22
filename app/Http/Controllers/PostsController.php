@@ -50,14 +50,10 @@ class PostsController extends Controller
     }
     public function show($id)
     {
-        $post = Post::findOrFail($id);
-        $postCreatorId = $post->user_id;
-
-        $comments = Comments::where('post_id', $post->id)
-            ->get();
-
-        return view('posts.show', ['post' => $post, 'comments' => $comments]);
+        $post = Post::with('comments')->findOrFail($id);
+        return view('posts.show', ['post' => $post]);
     }
+
 
     public function edit($id)
     {

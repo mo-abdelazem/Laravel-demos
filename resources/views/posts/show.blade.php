@@ -15,11 +15,11 @@
 
             <h5 class="mt-4">Comments</h5>
             <ul class="list-group ">
-                @if ($comments->isEmpty())
+                @if ($post->comments->isEmpty())
                 <li class="list-group-item bg-dark border-white-50 text-light">No comments</li>
                 @endif
-                @if ($comments->count() > 0)
-                @foreach ($comments as $comment)
+                @if ($post->comments->count() > 0)
+                @foreach ($post->comments as $comment)
                 <li class="list-group-item bg-dark border-white-50 text-light">{{ $comment->body }}</li>
                 @endforeach
                 @endif
@@ -29,8 +29,7 @@
                 <input type="hidden" name="post_id" value="{{ $post->id }}">
                 <div class="form-group mt-3">
                     <label for="commentBody" class="form-label">Add a comment:</label>
-                    <textarea class="form-control bg-dark text-light my-2" id="commentBody" name="body"
-                        rows="2"></textarea>
+                    <textarea class="form-control bg-dark text-light my-2" id="commentBody" name="body" rows="2"></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
